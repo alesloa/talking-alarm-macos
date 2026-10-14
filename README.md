@@ -2,6 +2,14 @@
 
 A small native macOS menu bar app that speaks your custom alarm messages using the same system voice as Terminal's `say` command.
 
+## Screenshots
+
+These screenshots, provided by the project owner, show the alarm list and alarm editor.
+
+| Alarm list | Add an alarm |
+| --- | --- |
+| <img src="docs/screenshots/alarm-list.png" alt="Talking Alarm menu bar panel with a saved weekday alarm and launch at login enabled" width="300"> | <img src="docs/screenshots/add-alarm.png" alt="Alarm editor with a draggable clock, message field, voice test, and weekday repeat controls" width="300"> |
+
 ## Features
 
 - Set one-time alarms or repeat them every day or on selected weekdays.

@@ -13,7 +13,7 @@ enum AlarmTheme {
     static let destructive = Color(red: 1, green: 0.40, blue: 0.42)
     static let radius: CGFloat = 16
     static let width: CGFloat = 390
-    static let height: CGFloat = 650
+    static let height: CGFloat = 700
 }
 
 struct AlarmButtonStyle: ButtonStyle {
@@ -88,7 +88,7 @@ struct AlarmMenu: View {
                         .multilineTextAlignment(.center).frame(maxWidth: 245)
                 }.frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     LazyVStack(spacing: 10) {
                         ForEach(store.alarms) { alarm in
                             AlarmRow(alarm: alarm, editMode: editMode, revealDelete: revealedDelete == alarm.id,
@@ -148,7 +148,7 @@ struct AlarmEditor: View {
                 Button("Save", action: save).buttonStyle(AlarmButtonStyle(filled: true)).disabled(!hasMessage)
             }.padding(.horizontal, 22).padding(.vertical, 18)
 
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 18) {
                     timeControls
                     messageControls
@@ -208,6 +208,7 @@ struct AlarmEditor: View {
                 }.buttonStyle(AlarmButtonStyle()).disabled(!hasMessage || store.isSpeaking)
             }
             TextEditor(text: $message).font(.system(size: 14)).scrollContentBackground(.hidden)
+                .scrollIndicators(.hidden)
                 .padding(10).frame(height: 94).background(AlarmTheme.surface)
                 .clipShape(RoundedRectangle(cornerRadius: AlarmTheme.radius))
                 .overlay(RoundedRectangle(cornerRadius: AlarmTheme.radius).stroke(messageFocused ? AlarmTheme.accent : .clear, lineWidth: 1))
@@ -308,7 +309,7 @@ struct AlarmAlert: View {
         VStack(spacing: 16) {
             Label("Alarm", systemImage: "alarm").font(.system(size: 14, weight: .medium)).foregroundStyle(AlarmTheme.accent)
             Text(alarm.time, style: .time).font(.system(size: 42, weight: .light)).monospacedDigit()
-            ScrollView { Text(alarm.message).font(.system(size: 18)).multilineTextAlignment(.center).textSelection(.enabled).frame(maxWidth: .infinity) }
+            ScrollView(showsIndicators: false) { Text(alarm.message).font(.system(size: 18)).multilineTextAlignment(.center).textSelection(.enabled).frame(maxWidth: .infinity) }
             Button("Dismiss", action: dismiss).buttonStyle(AlarmButtonStyle(filled: true))
         }.padding(28).frame(width: 440, height: 280).background(AlarmTheme.background)
             .foregroundStyle(AlarmTheme.text).preferredColorScheme(.dark)
