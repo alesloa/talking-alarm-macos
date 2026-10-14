@@ -1,15 +1,39 @@
 # Talking Alarm
 
-A native macOS menu bar alarm with a dark, phone-sized panel. Requires macOS 13 or newer.
+A small native macOS menu bar app that speaks your custom alarm messages using the same system voice as Terminal's `say` command.
 
-## Build and run
+## Features
+
+- Set one-time alarms or repeat them every day or on selected weekdays.
+- Drag either clock hand, type a time directly, or switch AM/PM.
+- Enter exactly what the alarm should say and preview it with **Test voice**.
+- Swipe the whole alarm card to reveal Delete, or right-click for actions.
+- Save alarms locally, launch at login, and show a centered alert when an alarm fires.
+
+## Requirements
+
+- macOS 13 or newer.
+- Swift 6 or newer, provided by Xcode or the Xcode Command Line Tools.
+
+## Build and install
 
 ```sh
+git clone https://github.com/alesloa/talking-alarm-macos.git
+cd talking-alarm-macos
 zsh scripts/build-app.sh
+```
+
+Move `dist/Talking Alarm.app` into Applications and open it. Click the clock icon in the menu bar to add an alarm.
+
+The app enables launch at login on its first launch from Applications. You can change this using **Launch at login** in the panel. macOS may require approval in System Settings → General → Login Items.
+
+For a temporary run from the build folder:
+
+```sh
 open "dist/Talking Alarm.app"
 ```
 
-For regular use, move the app to Applications before turning on **Launch at login**. macOS may require approval in System Settings → General → Login Items.
+## Use
 
 Click the clock in the menu bar, add an alarm, enter the exact message to speak, and choose repeat days. Drag the short clock hand to adjust hours or the long hand to adjust minutes; dragging across twelve carries the time forward or backward. The digital readout, editable Set time field, and AM/PM controls all stay in sync. No days means a one-time alarm. Use Test voice to hear your exact message. Drag the alarm card left, or use a horizontal trackpad swipe, to reveal a separate Delete panel on its right; drag/swipe right to close it. The whole card, including its enable switch, moves together. The switch stays visible and usable while Delete is open. Swiping only reveals the action: click Delete to remove the alarm. Right-click for Edit Alarm, Enable/Disable Alarm, and Delete Alarm. Alarms are saved in `~/Library/Application Support/TalkingAlarm/alarms.json`.
 
