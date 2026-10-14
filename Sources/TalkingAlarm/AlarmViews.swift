@@ -65,7 +65,7 @@ struct AlarmMenu: View {
 
             if store.alarms.isEmpty {
                 VStack(spacing: 12) {
-                    Image(systemName: "alarm").font(.system(size: 38, weight: .light)).foregroundStyle(AlarmTheme.accent)
+                    Image(systemName: "alarm").font(.system(size: 38, weight: .light)).foregroundStyle(AlarmTheme.accentText)
                     Text("No alarms yet").font(.system(size: 19, weight: .semibold))
                     Text("Use + to set a time and a spoken message.")
                         .font(.system(size: 13)).foregroundStyle(AlarmTheme.secondary)
@@ -260,7 +260,7 @@ struct AlarmClockFace: View {
                 }
                 hand(.hour, phase: (Double(hour % 12) + Double(minute) / 60) / 12, center: center, length: size * ClockGeometry.hourLength)
                 hand(.minute, phase: Double(minute) / 60, center: center, length: size * ClockGeometry.minuteLength)
-                Circle().fill(AlarmTheme.accent).frame(width: 10, height: 10).position(center)
+                Circle().fill(AlarmTheme.accentText).frame(width: 10, height: 10).position(center)
             }
             .contentShape(Circle())
             .overlay(ClockInputSurface(time: $time, selectedHand: $selectedHand))
@@ -276,7 +276,7 @@ struct AlarmClockFace: View {
 
     private func hand(_ hand: ClockHand, phase: Double, center: CGPoint, length: Double) -> some View {
         let tip = ClockGeometry.point(phase: phase, center: center, length: length)
-        let color = hand == .minute ? AlarmTheme.accent : AlarmTheme.text
+        let color = hand == .minute ? AlarmTheme.accentText : AlarmTheme.text
         return ZStack {
             Path { path in path.move(to: center); path.addLine(to: tip) }
                 .stroke(color, style: StrokeStyle(lineWidth: hand == .hour ? 5 : 3, lineCap: .round))
