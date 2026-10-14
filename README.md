@@ -58,4 +58,4 @@ swift test
 TALKING_ALARM_RENDER_DIR="$PWD/artifacts" swift test --filter InterfaceRenderTests
 ```
 
-The render command captures real SwiftUI screens without changing saved alarms or starting a scheduler.
+The render command captures real SwiftUI screens using isolated sample data, without reading or changing saved alarms or starting a scheduler. Its sample message, time, and weekdays come from the alarm-list screenshot above.

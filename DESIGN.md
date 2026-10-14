@@ -20,7 +20,7 @@ Neutral charcoal surfaces, off-white text, a single amber accent, and red only f
 - Displayed dates, time formatting, weekday names, and AM/PM symbols come from Foundation's current calendar and locale.
 - Launch state comes from SMAppService; speaking state comes from the launched `/usr/bin/say` process; System voice describes that command's default voice with no override.
 - Empty-state copy, drag instructions, and action names describe working controls in AlarmViews.swift. Error text passes through actual system/process errors.
-- Render artifacts use existing alarms when present. Only when there are none, the render test uses the owner's example "Wake Up Alarm" and explicit test time 07:30. The fixture never writes user data or speaks.
+- Render artifacts use an isolated temporary alarms file. The fixture message "Wake Up Alarm", time 06:00, and weekday repeat come from the owner's README screenshot. The fixture never reads or writes the user's saved alarms or speaks.
 
 ## Pre-flight application
 

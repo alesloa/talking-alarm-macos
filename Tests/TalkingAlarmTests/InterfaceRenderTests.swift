@@ -12,15 +12,16 @@ final class InterfaceRenderTests: XCTestCase {
             _ = NSApplication.shared
             let output = URL(fileURLWithPath: directory)
             try FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
-            let store = AlarmStore(startsScheduling: false)
-            // The fallback message is the owner's example; these render fixtures
-            // never enter the user's saved alarms or start a scheduler.
-            let alarm = store.alarms.first ?? Alarm(hour: 7, minute: 30, message: "Wake Up Alarm", days: Set(1...7))
+            let fixtureDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+            try FileManager.default.createDirectory(at: fixtureDirectory, withIntermediateDirectories: true)
+            defer { try? FileManager.default.removeItem(at: fixtureDirectory) }
+            let store = AlarmStore(file: fixtureDirectory.appendingPathComponent("alarms.json"), startsScheduling: false)
+            // The message, time, and weekdays come from the owner's README screenshot.
+            // Render fixtures never read or change the user's saved alarms.
+            let alarm = Alarm(hour: 6, minute: 0, message: "Wake Up Alarm", days: [2, 3, 4, 5, 6])
             try Self.render(AlarmMenu(store: store), name: "alarms", output: output)
-            if store.alarms.isEmpty {
-                store.alarms = [alarm]
-                try Self.render(AlarmMenu(store: store), name: "alarms-fixture", output: output)
-            }
+            store.alarms = [alarm]
+            try Self.render(AlarmMenu(store: store), name: "alarms-fixture", output: output)
             try Self.render(AlarmEditor(store: store, alarm: alarm, close: {}), name: "edit-alarm", output: output)
             try Self.render(AlarmEditor(store: store, alarm: nil, close: {}), name: "add-alarm", output: output)
             try Self.render(AlarmAlert(alarm: alarm, dismiss: {}), name: "alarm-alert", output: output, size: NSSize(width: 440, height: 280))
