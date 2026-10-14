@@ -29,7 +29,7 @@ final class InterfaceRenderTests: XCTestCase {
         }
     }
 
-    @MainActor private static func render<V: View>(_ view: V, name: String, output: URL, size: NSSize = NSSize(width: 390, height: 650)) throws {
+    @MainActor private static func render<V: View>(_ view: V, name: String, output: URL, size: NSSize = NSSize(width: AlarmTheme.width, height: AlarmTheme.height)) throws {
         let host = NSHostingView(rootView: view.frame(width: size.width, height: size.height).preferredColorScheme(.dark))
         let window = NSWindow(contentRect: NSRect(origin: CGPoint(x: -10000, y: -10000), size: size), styleMask: [.borderless], backing: .buffered, defer: false)
         window.appearance = NSAppearance(named: .darkAqua)

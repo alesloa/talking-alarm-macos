@@ -10,7 +10,7 @@ DESIGN_VARIANCE: 4, MOTION_INTENSITY: 3, VISUAL_DENSITY: 5. This daily utility b
 
 ## Visual system
 
-Neutral charcoal surfaces, off-white text, a single amber accent, and red only for destructive actions. Use 16-point group corners, 10-point control corners, and circles for the clock and add icon. Main list and editor remain 390 by 650 points. Editor content scrolls instead of clipping controls. The clock, digital readout, editable field, and AM/PM selector share one Date binding.
+Neutral charcoal surfaces, off-white text, a single amber accent, and red only for destructive actions. Use 16-point group corners, 10-point control corners, and circles for the clock and add icon. Main list and editor are 390 by 700 points, with the extra height requested by the owner to give the editor more room. Scrollbars are hidden throughout the panel and message field as requested; scrolling remains available for longer content. The clock, digital readout, editable field, and AM/PM selector share one Date binding.
 
 ## Visible-value provenance
 
