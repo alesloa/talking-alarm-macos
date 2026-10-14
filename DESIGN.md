@@ -2,7 +2,7 @@
 
 ## Design read and audit
 
-This is a redesign of a personal native Mac utility inspired by the owner's iPhone Clock reference, not a website. Use SwiftUI, AppKit, San Francisco type, and SF Symbols. The owner's latest request replaces the original dark-only theme: follow macOS light/dark appearance and system color choices automatically.
+This is a redesign of a personal native Mac utility inspired by the owner's iPhone Clock reference, not a website. Use SwiftUI, AppKit, San Francisco type, and SF Symbols. The owner's latest request replaces the original dark-only theme: follow macOS light/dark appearance automatically while retaining the original orange accent.
 
 The old UI had pure black surfaces, uneven 22-point gaps, a small read-only clock, and a cramped direct time field. Preserve the clock/menu bar entry, saved data format, Message and Repeat workflow, Terminal `say` speech, launch at login, and delete access. Restore hand manipulation instead of removing the clock.
 
@@ -10,11 +10,11 @@ DESIGN_VARIANCE: 4, MOTION_INTENSITY: 3, VISUAL_DENSITY: 5. This daily utility b
 
 ## Visual system
 
-Neutral light surfaces or charcoal dark surfaces, system label colors, the user's macOS accent color, and red only for destructive actions. AppKit dynamic colors resolve the shared palette using the containing window's appearance; no app window or SwiftUI view forces a theme. Filled controls choose black or white labels for contrast, and plain accent action text adjusts its brightness for legibility. Use 16-point group corners, 10-point control corners, and circles for the clock and add icon. Main list and editor are 390 by 700 points, with the extra height requested by the owner to give the editor more room. Scrollbars are hidden throughout the panel and message field as requested; scrolling remains available for longer content. The clock, digital readout, editable field, and AM/PM selector share one Date binding.
+Neutral light surfaces or charcoal dark surfaces, system label colors, the owner's original orange accent, and red only for destructive actions. AppKit dynamic colors resolve the shared palette using the containing window's appearance; no app window or SwiftUI view forces a theme. Filled controls use dark labels on the original orange. Plain orange action labels use a darker shade in light mode for legibility. Use 16-point group corners, 10-point control corners, and circles for the clock and add icon. Main list and editor are 390 by 700 points, with the extra height requested by the owner to give the editor more room. Scrollbars are hidden throughout the panel and message field as requested; scrolling remains available for longer content. The clock, digital readout, editable field, and AM/PM selector share one Date binding.
 
 ## Visible-value provenance
 
-- The owner's requests and iPhone screenshot supply the alarm workflow, labels, editable time, repeat controls, hand dragging, voice test, and delete behavior. The latest request supplies automatic system appearance; macOS supplies the current appearance, accent, and label colors.
+- The owner's requests and iPhone screenshot supply the alarm workflow, labels, editable time, repeat controls, hand dragging, voice test, and delete behavior. The latest request supplies automatic system appearance; macOS supplies the current appearance and label colors, while the owner supplies the original orange accent.
 - Alarm hours, minutes, messages, repeat days, and enabled state come from owner input or the existing saved alarms JSON file.
 - Clock digits and minute marks come from the implemented twelve-hour/sixty-minute clock scale; geometry derives both hands from the selected Date.
 - Displayed dates, time formatting, weekday names, and AM/PM symbols come from Foundation's current calendar and locale.
@@ -33,3 +33,7 @@ AppearanceTests checks body, secondary, accent action, and destructive labels ag
 The owner's clarified request supplies the sliding whole alarm card, separate trailing Delete panel, visible toggle, and right-click actions. RowInputSurface.swift handles native pointer and horizontal scroll-wheel input; AlarmRow.swift translates the entire rounded card, including the toggle, and uses a brief spring to settle open or closed. The Delete panel follows alongside the card with an eight-point gap, outside its container. Each alarm has its own rounded container. Vertical scrolling passes through to the list. Reveal distance is an internal layout measurement, never displayed as user data. There is no automatic deletion on a full swipe. The visible Delete label is the owner's requested action, already implemented by the alarm-removal callback.
 
 The native context menu uses the existing Edit Alarm, Enable/Disable Alarm, and Delete Alarm actions. Its enable/disable label derives from the stored enabled state. Tests send AppKit drag events in both directions, verify intermediate movement and the switch moving with the card, click the switch while open, verify the Delete panel lies to the right of it, click Delete, exercise context-menu and edit-mode actions, and simulate horizontal scroll-wheel input. Render artifacts include closed and revealed rows.
+
+## Panel dismissal
+
+The owner requested reopening the menu bar panel at the alarm list. PanelDismissObserver.swift observes the containing AppKit window because MenuBarExtra can retain its SwiftUI view after hiding it. An actual hidden or closed window resets adding, editing, edit mode, and revealed Delete state; temporary focus changes while the panel remains visible preserve the draft. Resetting a panel does not save or change alarms. Native tests hide and reopen the same retained window and transfer focus to another window while the panel stays visible.

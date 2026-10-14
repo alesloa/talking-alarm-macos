@@ -37,9 +37,18 @@ struct AlarmMenu: View {
         .background(AlarmTheme.background)
         .foregroundStyle(AlarmTheme.text)
         .tint(AlarmTheme.accent)
+        .background(PanelDismissObserver(onDismiss: resetMenu).frame(width: 0, height: 0))
+        .onDisappear(perform: resetMenu)
         .alert("Talking Alarm", isPresented: Binding(get: { store.error != nil }, set: { if !$0 { store.error = nil } })) {
             Button("OK") { store.error = nil }
         } message: { Text(store.error ?? "") }
+    }
+
+    private func resetMenu() {
+        adding = false
+        editing = nil
+        editMode = false
+        revealedDelete = nil
     }
 
     private var list: some View {

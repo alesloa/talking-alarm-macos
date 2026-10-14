@@ -12,7 +12,7 @@ These screenshots, provided by the project owner, show the alarm list and alarm 
 
 ## Features
 
-- Follow macOS light/dark appearance and the user's selected system accent color automatically.
+- Follow macOS light/dark appearance automatically while keeping the original orange accent.
 - Set one-time alarms or repeat them every day or on selected weekdays.
 - Drag either clock hand, type a time directly, or switch AM/PM.
 - Enter exactly what the alarm should say and preview it with **Test voice**.
@@ -44,7 +44,7 @@ open "dist/Talking Alarm.app"
 
 ## Use
 
-Click the clock in the menu bar, add an alarm, enter the exact message to speak, and choose repeat days. Drag the short clock hand to adjust hours or the long hand to adjust minutes; dragging across twelve carries the time forward or backward. The digital readout, editable Set time field, and AM/PM controls all stay in sync. No days means a one-time alarm. Use Test voice to hear your exact message. Drag the alarm card left, or use a horizontal trackpad swipe, to reveal a separate Delete panel on its right; drag/swipe right to close it. The whole card, including its enable switch, moves together. The switch stays visible and usable while Delete is open. Swiping only reveals the action: click Delete to remove the alarm. Right-click for Edit Alarm, Enable/Disable Alarm, and Delete Alarm. Alarms are saved in `~/Library/Application Support/TalkingAlarm/alarms.json`.
+Click the clock in the menu bar, add an alarm, enter the exact message to speak, and choose repeat days. Clicking away closes the panel; opening it again returns to the alarm list and discards unsaved drafts. Drag the short clock hand to adjust hours or the long hand to adjust minutes; dragging across twelve carries the time forward or backward. The digital readout, editable Set time field, and AM/PM controls all stay in sync. No days means a one-time alarm. Use Test voice to hear your exact message. Drag the alarm card left, or use a horizontal trackpad swipe, to reveal a separate Delete panel on its right; drag/swipe right to close it. The whole card, including its enable switch, moves together. The switch stays visible and usable while Delete is open. Swiping only reveals the action: click Delete to remove the alarm. Right-click for Edit Alarm, Enable/Disable Alarm, and Delete Alarm. Alarms are saved in `~/Library/Application Support/TalkingAlarm/alarms.json`.
 
 The app must be running and the Mac awake for an alarm to fire. It does not wake the Mac or replay missed alarms. Speech plays once through the current system audio output; a centered window stays until dismissed. Closing that window does not stop speech. There is no snooze.
 

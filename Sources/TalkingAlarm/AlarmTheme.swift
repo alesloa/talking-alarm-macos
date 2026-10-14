@@ -12,35 +12,14 @@ enum AlarmTheme {
     static let border = adaptive(light: .init(white: 0.76, alpha: 1), dark: .init(white: 0.27, alpha: 1))
     static let majorTick = adaptive(light: .init(white: 0.42, alpha: 1), dark: .init(white: 0.56, alpha: 1))
     static let minorTick = adaptive(light: .init(white: 0.72, alpha: 1), dark: .init(white: 0.31, alpha: 1))
-    static let accent = Color.accentColor
+    // Preserve the owner's original orange; only light/dark appearance follows macOS.
+    static let accent = Color(red: 1, green: 0.70, blue: 0.35)
+    static let accentLabel = Color(white: 0.065)
+    static let accentText = adaptive(light: .init(srgbRed: 0.60, green: 0.29, blue: 0.04, alpha: 1), dark: .init(srgbRed: 1, green: 0.70, blue: 0.35, alpha: 1))
     static let destructive = adaptive(light: .init(srgbRed: 0.72, green: 0.12, blue: 0.16, alpha: 1), dark: .init(srgbRed: 1, green: 0.40, blue: 0.42, alpha: 1))
     static let radius: CGFloat = 16
     static let width: CGFloat = 390
     static let height: CGFloat = 700
-
-    // An accent chosen in System Settings can be very pale or very dark.
-    // Use whichever label color has more contrast on filled controls.
-    static let accentLabel = dynamic { _ in
-        luminance(.controlAccentColor) > 0.179 ? .black : .white
-    }
-
-    // Plain action labels keep the system accent hue, with enough contrast
-    // against all three unfilled surfaces in the current appearance.
-    static let accentText = dynamic { appearance in
-        let dark = isDark(appearance)
-        let base = NSColor.controlAccentColor.usingColorSpace(.sRGB) ?? .systemBlue
-        let surface = dark ? NSColor(white: 0.17, alpha: 1) : NSColor(white: 0.90, alpha: 1)
-        let target: CGFloat = dark ? 1 : 0
-        for step in 0...20 {
-            let amount = CGFloat(step) / 20
-            let color = NSColor(srgbRed: base.redComponent * (1 - amount) + target * amount,
-                                green: base.greenComponent * (1 - amount) + target * amount,
-                                blue: base.blueComponent * (1 - amount) + target * amount, alpha: 1)
-            let values = [luminance(color), luminance(surface)].sorted()
-            if (values[1] + 0.05) / (values[0] + 0.05) >= 4.5 { return color }
-        }
-        return dark ? .white : .black
-    }
 
     private static func isDark(_ appearance: NSAppearance) -> Bool {
         appearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
@@ -58,12 +37,4 @@ enum AlarmTheme {
         })
     }
 
-    private static func luminance(_ color: NSColor) -> Double {
-        guard let rgb = color.usingColorSpace(.sRGB) else { return 0 }
-        func linear(_ channel: CGFloat) -> Double {
-            let value = Double(channel)
-            return value <= 0.04045 ? value / 12.92 : pow((value + 0.055) / 1.055, 2.4)
-        }
-        return 0.2126 * linear(rgb.redComponent) + 0.7152 * linear(rgb.greenComponent) + 0.0722 * linear(rgb.blueComponent)
-    }
 }

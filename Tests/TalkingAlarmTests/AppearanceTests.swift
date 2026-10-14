@@ -40,7 +40,20 @@ final class AppearanceTests: XCTestCase {
                             XCTAssertGreaterThanOrEqual(Self.contrast(NSColor(foreground), on: base), 4.5, "\(name.rawValue) labels must stay readable")
                         }
                     }
-                    XCTAssertGreaterThanOrEqual(Self.contrast(NSColor(AlarmTheme.accentLabel), on: .controlAccentColor), 4.5)
+                    XCTAssertGreaterThanOrEqual(Self.contrast(NSColor(AlarmTheme.accentLabel), on: NSColor(AlarmTheme.accent)), 4.5)
+                }
+            }
+        }
+    }
+
+    func testOrangeAccentIsPreservedInBothAppearances() async {
+        await MainActor.run {
+            for name in [NSAppearance.Name.aqua, .darkAqua] {
+                NSAppearance(named: name)!.performAsCurrentDrawingAppearance {
+                    let color = NSColor(AlarmTheme.accent).usingColorSpace(.sRGB)!
+                    XCTAssertEqual(color.redComponent, 1, accuracy: 0.001)
+                    XCTAssertEqual(color.greenComponent, 0.70, accuracy: 0.001)
+                    XCTAssertEqual(color.blueComponent, 0.35, accuracy: 0.001)
                 }
             }
         }
