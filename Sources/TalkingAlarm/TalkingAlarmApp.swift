@@ -121,7 +121,6 @@ struct Alarm: Identifiable, Codable {
         alertWindow?.close()
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 440, height: 280), styleMask: [.titled, .closable], backing: .buffered, defer: false)
         window.title = "Talking Alarm"
-        window.appearance = NSAppearance(named: .darkAqua)
         window.isReleasedWhenClosed = false
         window.level = .floating
         window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]

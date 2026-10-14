@@ -1,21 +1,6 @@
 import SwiftUI
 import AppKit
 
-// Native SF typography and SF Symbols; solid surfaces keep the requested dark
-// appearance readable regardless of the desktop behind the menu bar panel.
-enum AlarmTheme {
-    static let background = Color(white: 0.065)
-    static let surface = Color(white: 0.115)
-    static let field = Color(white: 0.17)
-    static let text = Color(white: 0.95)
-    static let secondary = Color(white: 0.68)
-    static let accent = Color(red: 1, green: 0.70, blue: 0.35)
-    static let destructive = Color(red: 1, green: 0.40, blue: 0.42)
-    static let radius: CGFloat = 16
-    static let width: CGFloat = 390
-    static let height: CGFloat = 700
-}
-
 struct AlarmButtonStyle: ButtonStyle {
     var filled = false
     var destructive = false
@@ -25,7 +10,7 @@ struct AlarmButtonStyle: ButtonStyle {
             .font(.system(size: 13, weight: .semibold))
             .lineLimit(1)
             .padding(.horizontal, 14).frame(minHeight: 34)
-            .foregroundStyle(filled ? AlarmTheme.background : destructive ? AlarmTheme.destructive : AlarmTheme.accent)
+            .foregroundStyle(filled ? AlarmTheme.accentLabel : destructive ? AlarmTheme.destructive : AlarmTheme.accentText)
             .background(filled ? AlarmTheme.accent : AlarmTheme.field)
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .opacity(enabled ? (configuration.isPressed ? 0.75 : 1) : 0.4)
@@ -52,7 +37,6 @@ struct AlarmMenu: View {
         .background(AlarmTheme.background)
         .foregroundStyle(AlarmTheme.text)
         .tint(AlarmTheme.accent)
-        .preferredColorScheme(.dark)
         .alert("Talking Alarm", isPresented: Binding(get: { store.error != nil }, set: { if !$0 { store.error = nil } })) {
             Button("OK") { store.error = nil }
         } message: { Text(store.error ?? "") }
@@ -64,7 +48,7 @@ struct AlarmMenu: View {
                 Label("Talking Alarm", systemImage: "clock").font(.system(size: 13, weight: .medium)).foregroundStyle(AlarmTheme.secondary)
                 Spacer()
                 Button(editMode ? "Done" : "Edit") { editMode.toggle(); revealedDelete = nil }
-                    .buttonStyle(.plain).foregroundStyle(AlarmTheme.accent)
+                    .buttonStyle(.plain).foregroundStyle(AlarmTheme.accentText)
                     .disabled(store.alarms.isEmpty)
             }.padding(.horizontal, 22).padding(.top, 22)
 
@@ -74,7 +58,7 @@ struct AlarmMenu: View {
                 Button { adding = true } label: {
                     Image(systemName: "plus").font(.system(size: 19, weight: .medium))
                         .frame(width: 38, height: 38)
-                        .background(AlarmTheme.accent).foregroundStyle(AlarmTheme.background)
+                        .background(AlarmTheme.accent).foregroundStyle(AlarmTheme.accentLabel)
                         .clipShape(Circle())
                 }.buttonStyle(.plain).accessibilityLabel("Add alarm")
             }.padding(.horizontal, 22).padding(.top, 24).padding(.bottom, 22)
@@ -141,7 +125,7 @@ struct AlarmEditor: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Button("Cancel", action: close).buttonStyle(.plain).foregroundStyle(AlarmTheme.accent).keyboardShortcut(.cancelAction)
+                Button("Cancel", action: close).buttonStyle(.plain).foregroundStyle(AlarmTheme.accentText).keyboardShortcut(.cancelAction)
                 Spacer()
                 Text(alarm == nil ? "Add Alarm" : "Edit Alarm").font(.system(size: 15, weight: .semibold))
                 Spacer()
@@ -160,7 +144,7 @@ struct AlarmEditor: View {
                 }.padding(.horizontal, 18).padding(.top, 6).padding(.bottom, 20)
             }
         }
-        .foregroundStyle(AlarmTheme.text).tint(AlarmTheme.accent).background(AlarmTheme.background).preferredColorScheme(.dark)
+        .foregroundStyle(AlarmTheme.text).tint(AlarmTheme.accent).background(AlarmTheme.background)
     }
 
     private var timeControls: some View {
@@ -193,7 +177,7 @@ struct AlarmEditor: View {
         } label: {
             Text(title).font(.system(size: 12, weight: .semibold)).frame(maxWidth: .infinity).frame(height: 28)
                 .background(isPM == pm ? AlarmTheme.accent : .clear)
-                .foregroundStyle(isPM == pm ? AlarmTheme.background : AlarmTheme.secondary)
+                .foregroundStyle(isPM == pm ? AlarmTheme.accentLabel : AlarmTheme.secondary)
                 .clipShape(RoundedRectangle(cornerRadius: 7))
         }.buttonStyle(.plain).accessibilityAddTraits(isPM == pm ? .isSelected : [])
     }
@@ -222,7 +206,7 @@ struct AlarmEditor: View {
                 Text("Repeat").font(.system(size: 14, weight: .semibold))
                 Spacer()
                 Button(days.count == 7 ? "Clear" : "Every day") { days = days.count == 7 ? [] : Set(1...7) }
-                    .font(.system(size: 12, weight: .medium)).buttonStyle(.plain).foregroundStyle(AlarmTheme.accent)
+                    .font(.system(size: 12, weight: .medium)).buttonStyle(.plain).foregroundStyle(AlarmTheme.accentText)
             }
             VStack(alignment: .leading, spacing: 13) {
                 HStack(spacing: 5) {
@@ -231,7 +215,7 @@ struct AlarmEditor: View {
                             Text(Calendar.current.veryShortWeekdaySymbols[day - 1]).font(.system(size: 13, weight: .semibold))
                                 .frame(maxWidth: .infinity).frame(height: 36)
                                 .background(days.contains(day) ? AlarmTheme.accent : AlarmTheme.field)
-                                .foregroundStyle(days.contains(day) ? AlarmTheme.background : AlarmTheme.text)
+                                .foregroundStyle(days.contains(day) ? AlarmTheme.accentLabel : AlarmTheme.text)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                         }.buttonStyle(.plain).accessibilityLabel(Calendar.current.weekdaySymbols[day - 1])
                             .accessibilityValue(days.contains(day) ? "Selected" : "Not selected")
@@ -263,12 +247,12 @@ struct AlarmClockFace: View {
             let parts = Calendar.current.dateComponents([.hour, .minute], from: time)
             let hour = parts.hour ?? 0, minute = parts.minute ?? 0
             ZStack {
-                Circle().fill(AlarmTheme.surface).overlay(Circle().stroke(Color(white: 0.27), lineWidth: 1.5))
+                Circle().fill(AlarmTheme.surface).overlay(Circle().stroke(AlarmTheme.border, lineWidth: 1.5))
                 ForEach(0..<60, id: \.self) { tick in
                     let start = ClockGeometry.point(phase: Double(tick) / 60, center: center, length: size * (tick % 5 == 0 ? 0.435 : 0.455))
                     let end = ClockGeometry.point(phase: Double(tick) / 60, center: center, length: size * 0.473)
                     Path { path in path.move(to: start); path.addLine(to: end) }
-                        .stroke(Color(white: tick % 5 == 0 ? 0.56 : 0.31), lineWidth: tick % 5 == 0 ? 1.4 : 0.7)
+                        .stroke(tick % 5 == 0 ? AlarmTheme.majorTick : AlarmTheme.minorTick, lineWidth: tick % 5 == 0 ? 1.4 : 0.7)
                 }
                 ForEach(1...12, id: \.self) { number in
                     Text("\(number)").font(.system(size: 13, weight: .medium)).foregroundStyle(AlarmTheme.text)
@@ -307,11 +291,11 @@ struct AlarmAlert: View {
     let dismiss: () -> Void
     var body: some View {
         VStack(spacing: 16) {
-            Label("Alarm", systemImage: "alarm").font(.system(size: 14, weight: .medium)).foregroundStyle(AlarmTheme.accent)
+            Label("Alarm", systemImage: "alarm").font(.system(size: 14, weight: .medium)).foregroundStyle(AlarmTheme.accentText)
             Text(alarm.time, style: .time).font(.system(size: 42, weight: .light)).monospacedDigit()
             ScrollView(showsIndicators: false) { Text(alarm.message).font(.system(size: 18)).multilineTextAlignment(.center).textSelection(.enabled).frame(maxWidth: .infinity) }
             Button("Dismiss", action: dismiss).buttonStyle(AlarmButtonStyle(filled: true))
         }.padding(28).frame(width: 440, height: 280).background(AlarmTheme.background)
-            .foregroundStyle(AlarmTheme.text).preferredColorScheme(.dark)
+            .foregroundStyle(AlarmTheme.text)
     }
 }

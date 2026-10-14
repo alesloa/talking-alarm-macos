@@ -12,6 +12,7 @@ These screenshots, provided by the project owner, show the alarm list and alarm 
 
 ## Features
 
+- Follow macOS light/dark appearance and the user's selected system accent color automatically.
 - Set one-time alarms or repeat them every day or on selected weekdays.
 - Drag either clock hand, type a time directly, or switch AM/PM.
 - Enter exactly what the alarm should say and preview it with **Test voice**.
@@ -58,4 +59,4 @@ swift test
 TALKING_ALARM_RENDER_DIR="$PWD/artifacts" swift test --filter InterfaceRenderTests
 ```
 
-The render command captures real SwiftUI screens using isolated sample data, without reading or changing saved alarms or starting a scheduler. Its sample message, time, and weekdays come from the alarm-list screenshot above.
+The render command captures real SwiftUI screens in both light and dark appearances using isolated sample data, without reading or changing saved alarms or starting a scheduler. Its sample message, time, and weekdays come from the alarm-list screenshot above. The results are saved under `artifacts/light/` and `artifacts/dark/`.

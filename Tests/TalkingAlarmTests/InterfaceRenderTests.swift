@@ -19,21 +19,26 @@ final class InterfaceRenderTests: XCTestCase {
             // The message, time, and weekdays come from the owner's README screenshot.
             // Render fixtures never read or change the user's saved alarms.
             let alarm = Alarm(hour: 6, minute: 0, message: "Wake Up Alarm", days: [2, 3, 4, 5, 6])
-            try Self.render(AlarmMenu(store: store), name: "alarms", output: output)
-            store.alarms = [alarm]
-            try Self.render(AlarmMenu(store: store), name: "alarms-fixture", output: output)
-            try Self.render(AlarmEditor(store: store, alarm: alarm, close: {}), name: "edit-alarm", output: output)
-            try Self.render(AlarmEditor(store: store, alarm: nil, close: {}), name: "add-alarm", output: output)
-            try Self.render(AlarmAlert(alarm: alarm, dismiss: {}), name: "alarm-alert", output: output, size: NSSize(width: 440, height: 280))
-            try Self.render(AlarmRow(alarm: alarm, editMode: false, revealDelete: false, edit: {}, toggle: {}, delete: {}).tint(AlarmTheme.accent), name: "row-closed", output: output, size: NSSize(width: 358, height: 140))
-            try Self.render(AlarmRow(alarm: alarm, editMode: false, revealDelete: true, edit: {}, toggle: {}, delete: {}).tint(AlarmTheme.accent), name: "row-delete", output: output, size: NSSize(width: 358, height: 140))
+            for appearance in [NSAppearance.Name.aqua, .darkAqua] {
+                let folder = output.appendingPathComponent(appearance == .aqua ? "light" : "dark")
+                try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+                store.alarms = []
+                try Self.render(AlarmMenu(store: store), name: "alarms", output: folder, appearance: appearance)
+                store.alarms = [alarm]
+                try Self.render(AlarmMenu(store: store), name: "alarms-fixture", output: folder, appearance: appearance)
+                try Self.render(AlarmEditor(store: store, alarm: alarm, close: {}), name: "edit-alarm", output: folder, appearance: appearance)
+                try Self.render(AlarmEditor(store: store, alarm: nil, close: {}), name: "add-alarm", output: folder, appearance: appearance)
+                try Self.render(AlarmAlert(alarm: alarm, dismiss: {}), name: "alarm-alert", output: folder, appearance: appearance, size: NSSize(width: 440, height: 280))
+                try Self.render(AlarmRow(alarm: alarm, editMode: false, revealDelete: false, edit: {}, toggle: {}, delete: {}).tint(AlarmTheme.accent), name: "row-closed", output: folder, appearance: appearance, size: NSSize(width: 358, height: 140))
+                try Self.render(AlarmRow(alarm: alarm, editMode: false, revealDelete: true, edit: {}, toggle: {}, delete: {}).tint(AlarmTheme.accent), name: "row-delete", output: folder, appearance: appearance, size: NSSize(width: 358, height: 140))
+            }
         }
     }
 
-    @MainActor private static func render<V: View>(_ view: V, name: String, output: URL, size: NSSize = NSSize(width: AlarmTheme.width, height: AlarmTheme.height)) throws {
-        let host = NSHostingView(rootView: view.frame(width: size.width, height: size.height).preferredColorScheme(.dark))
+    @MainActor private static func render<V: View>(_ view: V, name: String, output: URL, appearance: NSAppearance.Name, size: NSSize = NSSize(width: AlarmTheme.width, height: AlarmTheme.height)) throws {
+        let host = NSHostingView(rootView: view.frame(width: size.width, height: size.height))
         let window = NSWindow(contentRect: NSRect(origin: CGPoint(x: -10000, y: -10000), size: size), styleMask: [.borderless], backing: .buffered, defer: false)
-        window.appearance = NSAppearance(named: .darkAqua)
+        window.appearance = NSAppearance(named: appearance)
         window.isReleasedWhenClosed = false
         window.contentView = host
         window.orderFront(nil)

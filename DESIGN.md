@@ -2,7 +2,7 @@
 
 ## Design read and audit
 
-This is a redesign of a personal native Mac utility inspired by the owner's iPhone Clock reference, not a website. Use SwiftUI, AppKit, San Francisco type, and SF Symbols. The explicitly requested dark theme remains locked throughout.
+This is a redesign of a personal native Mac utility inspired by the owner's iPhone Clock reference, not a website. Use SwiftUI, AppKit, San Francisco type, and SF Symbols. The owner's latest request replaces the original dark-only theme: follow macOS light/dark appearance and system color choices automatically.
 
 The old UI had pure black surfaces, uneven 22-point gaps, a small read-only clock, and a cramped direct time field. Preserve the clock/menu bar entry, saved data format, Message and Repeat workflow, Terminal `say` speech, launch at login, and delete access. Restore hand manipulation instead of removing the clock.
 
@@ -10,11 +10,11 @@ DESIGN_VARIANCE: 4, MOTION_INTENSITY: 3, VISUAL_DENSITY: 5. This daily utility b
 
 ## Visual system
 
-Neutral charcoal surfaces, off-white text, a single amber accent, and red only for destructive actions. Use 16-point group corners, 10-point control corners, and circles for the clock and add icon. Main list and editor are 390 by 700 points, with the extra height requested by the owner to give the editor more room. Scrollbars are hidden throughout the panel and message field as requested; scrolling remains available for longer content. The clock, digital readout, editable field, and AM/PM selector share one Date binding.
+Neutral light surfaces or charcoal dark surfaces, system label colors, the user's macOS accent color, and red only for destructive actions. AppKit dynamic colors resolve the shared palette using the containing window's appearance; no app window or SwiftUI view forces a theme. Filled controls choose black or white labels for contrast, and plain accent action text adjusts its brightness for legibility. Use 16-point group corners, 10-point control corners, and circles for the clock and add icon. Main list and editor are 390 by 700 points, with the extra height requested by the owner to give the editor more room. Scrollbars are hidden throughout the panel and message field as requested; scrolling remains available for longer content. The clock, digital readout, editable field, and AM/PM selector share one Date binding.
 
 ## Visible-value provenance
 
-- The owner's requests and iPhone screenshot supply the dark alarm workflow, labels, editable time, repeat controls, hand dragging, voice test, and delete behavior.
+- The owner's requests and iPhone screenshot supply the alarm workflow, labels, editable time, repeat controls, hand dragging, voice test, and delete behavior. The latest request supplies automatic system appearance; macOS supplies the current appearance, accent, and label colors.
 - Alarm hours, minutes, messages, repeat days, and enabled state come from owner input or the existing saved alarms JSON file.
 - Clock digits and minute marks come from the implemented twelve-hour/sixty-minute clock scale; geometry derives both hands from the selected Date.
 - Displayed dates, time formatting, weekday names, and AM/PM symbols come from Foundation's current calendar and locale.
@@ -24,9 +24,9 @@ Neutral charcoal surfaces, off-white text, a single amber accent, and red only f
 
 ## Pre-flight application
 
-Audit contrast, accent/radius consistency, labels, one-line buttons, keyboard access, dark surfaces, empty and error states, repeat selection, direct entry, clock geometry, and native screen renders. The frontend skill's SEO, web frameworks, heroes, photography, responsive website layouts, marketing copy, and browser metrics do not apply to this native utility. No third-party UI system or image assets are needed.
+Audit contrast, accent/radius consistency, labels, one-line buttons, keyboard access, light and dark surfaces, empty and error states, repeat selection, direct entry, clock geometry, and native screen renders. The frontend skill's SEO, web frameworks, heroes, photography, responsive website layouts, marketing copy, and browser metrics do not apply to this native utility. No third-party UI system or image assets are needed.
 
-Verified body/button color pairs range from 4.94:1 to 15.04:1 contrast. Tests cover twelve clock positions, no-jump grabbing, full rotations, midnight and AM/PM rollover, overlapping grips, and native AppKit mouse events updating both hands through the SwiftUI binding. AppKit's first-mouse handling restores grabbing in the menu bar panel without the ScrollView competing for the pointer.
+AppearanceTests checks body, secondary, accent action, and destructive labels against all three surfaces at a minimum 4.5:1 contrast in both appearances, and exercises a light-dark-light switch on the same live panel. Native render artifacts cover both appearances. Tests cover twelve clock positions, no-jump grabbing, full rotations, midnight and AM/PM rollover, overlapping grips, and native AppKit mouse events updating both hands through the SwiftUI binding. AppKit's first-mouse handling restores grabbing in the menu bar panel without the ScrollView competing for the pointer.
 
 ## Alarm row interaction
 
